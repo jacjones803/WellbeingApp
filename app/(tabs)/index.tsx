@@ -40,7 +40,6 @@ export default function DashboardScreen() {
   const activeGoals = goals.filter(g => g.progress < 100).length;
   const recentAchievements = userStats.achievements.filter(a => a.unlockedAt).slice(-3);
 
-  // Today's completion
   const today = getEffectiveToday();
   const completionItems: { label: string; done: boolean; icon: React.ComponentProps<typeof Ionicons>['name']; route: string }[] = [
     { label: 'Mood',    done: !!todayMood,                                                route: '/mood',           icon: 'happy-outline'          },
@@ -54,10 +53,8 @@ export default function DashboardScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
 
-      {/* Greeting */}
       <Text style={styles.greeting}>{getGreeting(userName)}</Text>
 
-      {/* Level card */}
       <View style={[styles.card, styles.gradientPurple]}>
         <View style={styles.row}>
           <Ionicons name="trophy" size={28} color="#FFF" />
@@ -73,7 +70,6 @@ export default function DashboardScreen() {
         <Text style={styles.xpText}>{xpProgress} / 1000 XP to Level {level + 1}</Text>
       </View>
 
-      {/* Streak card */}
       <View style={[styles.card, styles.gradientOrange]}>
         <View style={styles.row}>
           <Text style={{ fontSize: 28 }}>🔥</Text>
@@ -95,7 +91,6 @@ export default function DashboardScreen() {
         </View>
       </View>
 
-      {/* Today's completion */}
       <View style={styles.completionCard}>
         <View style={styles.completionHeader}>
           <Text style={styles.completionTitle}>Today's Progress</Text>
@@ -120,7 +115,6 @@ export default function DashboardScreen() {
         </View>
       </View>
 
-      {/* Today's Stats */}
       <Text style={styles.sectionTitle}>Today's Stats</Text>
       <View style={styles.grid2}>
         <TouchableOpacity style={[styles.statCard, { backgroundColor: Colors.blue + '20' }]} onPress={() => router.push('/(tabs)/health' as any)}>
@@ -156,11 +150,9 @@ export default function DashboardScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* AI Suggestions */}
       <Text style={styles.sectionTitle}>AI Suggestions</Text>
       <AISuggestionsCard />
 
-      {/* Recent Achievements */}
       {recentAchievements.length > 0 && (
         <>
           <Text style={styles.sectionTitle}>Recent Achievements</Text>
@@ -188,7 +180,6 @@ const makeStyles = (C: ColorScheme) => StyleSheet.create({
   greeting: { fontSize: 24, fontWeight: '800', color: C.text, marginBottom: 14 },
   sectionTitle: { fontSize: 16, fontWeight: '700', color: C.text, marginTop: 20, marginBottom: 10 },
 
-  // Completion card
   completionCard: {
     backgroundColor: C.card, borderRadius: 16, padding: 16, marginBottom: 16,
   },
@@ -208,7 +199,6 @@ const makeStyles = (C: ColorScheme) => StyleSheet.create({
   completionBadgeText: { fontSize: 11, fontWeight: '600', color: C.subtext, flexShrink: 1 },
   completionBadgeTextDone: { color: C.primary },
 
-  // Level / streak cards
   card: { borderRadius: 16, padding: 16, marginBottom: 12 },
   gradientPurple: { backgroundColor: C.primary },
   gradientOrange: { backgroundColor: C.orange },
@@ -220,7 +210,6 @@ const makeStyles = (C: ColorScheme) => StyleSheet.create({
   xpBarFill: { height: 8, backgroundColor: '#FFF', borderRadius: 4 },
   xpText: { fontSize: 12, color: 'rgba(255,255,255,0.9)', marginTop: 4 },
 
-  // Stat cards
   grid2: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   statCard: { width: '47%', borderRadius: 12, padding: 14, alignItems: 'center', gap: 4 },
   statValue: { fontSize: 18, fontWeight: '700', color: C.text },

@@ -10,7 +10,6 @@ import { ColorScheme } from '../../constants/theme';
 
 const getToday = () => new Date().toISOString().split('T')[0];
 
-// Converts decimal hours to "Xh Ym" display string
 const formatSleep = (h: number) => {
   if (h === 0) return '—';
   const hrs = Math.floor(h);
@@ -34,7 +33,6 @@ const formatExercise = (m: number) => {
   return rem === 0 ? `${h} h` : `${h} h ${rem} min`;
 };
 
-// ── Sleep Wheel Picker ────────────────────────────────────────────────────────
 function SleepDropdown({
   value, onChange, color, cardBg, borderColor, textColor, subtextColor,
 }: {
@@ -107,7 +105,6 @@ function SleepDropdown({
   );
 }
 
-// ── Exercise Dropdown ─────────────────────────────────────────────────────────
 function ExerciseDropdown({
   value, onChange, color, cardBg, borderColor, textColor,
 }: {
@@ -173,7 +170,6 @@ function ExerciseDropdown({
   );
 }
 
-// ── Weight Wheel Picker ───────────────────────────────────────────────────────
 const KG_OPTIONS    = Array.from({ length: 171 }, (_, i) => i + 30); // 30–200 kg
 const DEC_OPTIONS   = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];               // .0–.9
 const STONE_OPTIONS = Array.from({ length: 28 },  (_, i) => i + 4);  // 4–31 st
@@ -397,7 +393,6 @@ function WeightDropdown({
   );
 }
 
-// ── Stepper ───────────────────────────────────────────────────────────────────
 function Stepper({
   value, onChange, step, min, max, unit, decimals = 0, color, styles,
 }: {
@@ -434,13 +429,11 @@ function Stepper({
   );
 }
 
-// ── Main Screen ───────────────────────────────────────────────────────────────
 export default function HealthScreen() {
   const { healthEntries, addHealthEntry, updateHealthEntry, getTodayHealthEntry, healthTargets, setHealthTargets, getEffectiveToday } = useApp();
   const Colors = useColors();
   const styles = makeStyles(Colors);
 
-  // Log modal state (numbers, not strings)
   const [logModal, setLogModal]       = useState(false);
   const [logDate, setLogDate]         = useState(() => getEffectiveToday());
   const [waterUnit, setWaterUnit]     = useState<'ml' | 'oz'>('ml');
@@ -449,7 +442,6 @@ export default function HealthScreen() {
   const [exerciseVal, setExerciseVal] = useState(0);
   const [weightVal, setWeightVal]     = useState(0);
 
-  // Targets modal state
   const [targetModal, setTargetModal]   = useState(false);
   const [tWater, setTWater]             = useState(healthTargets.water);
   const [tSleep, setTSleep]             = useState(healthTargets.sleep);
@@ -529,8 +521,6 @@ export default function HealthScreen() {
     setTargetModal(false);
   };
 
-  // Last 7 days
-  // Build Mon–Sun for the current week
   const todayDate = new Date();
   const dayOfWeek = (todayDate.getDay() + 6) % 7; // Mon=0 … Sun=6
   const monday    = new Date(todayDate);
@@ -586,7 +576,6 @@ export default function HealthScreen() {
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.screenTitle}>Health Tracking</Text>
 
-      {/* Log / Update button */}
       <TouchableOpacity style={styles.logBtn} onPress={openLog}>
         <Ionicons name={todayEntry ? 'pencil' : 'add-circle'} size={20} color="#FFF" />
         <Text style={styles.logBtnText}>
@@ -594,7 +583,6 @@ export default function HealthScreen() {
         </Text>
       </TouchableOpacity>
 
-      {/* ── Daily Targets ── */}
       <View style={styles.targetsCard}>
         <View style={styles.targetsHeader}>
           <Text style={styles.targetsTitle}>Daily Targets</Text>
@@ -618,7 +606,6 @@ export default function HealthScreen() {
         </View>
       </View>
 
-      {/* ── Today's Metrics ── */}
       {todayEntry ? (
         <>
           <Text style={styles.sectionTitle}>Today's Data</Text>
@@ -664,7 +651,6 @@ export default function HealthScreen() {
         </View>
       )}
 
-      {/* ── Consistency ── */}
       <View style={styles.consistencyHeaderRow}>
         <Text style={[styles.sectionTitle, { marginTop: 0, marginBottom: 0 }]}>Consistency</Text>
         <View style={styles.consistencyToggle}>
@@ -723,16 +709,13 @@ export default function HealthScreen() {
                 <Ionicons name="chevron-forward" size={18} color={Colors.primary} />
               </TouchableOpacity>
             </View>
-            {/* Day-of-week headers */}
             <View style={styles.monthGrid}>
               {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => (
                 <Text key={i} style={styles.monthHeader}>{d}</Text>
               ))}
-              {/* Blank offset cells */}
               {Array.from({ length: firstDayOfWeek }).map((_, i) => (
                 <View key={`blank-${i}`} style={styles.monthCell} />
               ))}
-              {/* Day cells */}
               {monthDays.map(({ day, date, logged }) => {
                 const isToday = date === getToday();
                 const isFuture = date > getToday();

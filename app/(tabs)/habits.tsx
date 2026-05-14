@@ -50,7 +50,6 @@ export default function HabitsScreen() {
     setModalVisible(false);
   };
 
-  // Per-habit helpers
   const getStreak = (habitId: string): number => {
     let streak = 0;
     const d = new Date();
@@ -80,7 +79,6 @@ export default function HabitsScreen() {
         <Text style={styles.addBtnText}>Add New Habit</Text>
       </TouchableOpacity>
 
-      {/* ── Summary card ── */}
       {habits.length > 0 && (
         <View style={styles.summaryCard}>
           <View style={styles.summaryTopRow}>
@@ -109,7 +107,6 @@ export default function HabitsScreen() {
         </View>
       )}
 
-      {/* ── Habit cards ── */}
       {habits.map(habit => {
         const weekLogs      = getHabitWeekLogs(habit.id);
         const weekCompleted = weekLogs.filter(l => l.completed).length;
@@ -152,7 +149,6 @@ export default function HabitsScreen() {
               </TouchableOpacity>
             </View>
 
-            {/* Week grid Mon–Sun */}
             <View style={styles.weekGrid}>
               {weekLogs.map((log, i) => {
                 const isToday   = log.date === today;
@@ -188,7 +184,6 @@ export default function HabitsScreen() {
               })}
             </View>
 
-            {/* Week progress */}
             <View style={styles.weekProgressRow}>
               <Text style={styles.weekProgressLabel}>This week</Text>
               <Text style={[styles.weekProgressPct, { color: habit.color }]}>
@@ -199,12 +194,10 @@ export default function HabitsScreen() {
               <View style={[styles.progressFill, { width: `${weekPct}%`, backgroundColor: habit.color }]} />
             </View>
 
-            {/* Total check-ins */}
             <Text style={styles.totalLabel}>
               {total} total check-in{total !== 1 ? 's' : ''}
             </Text>
 
-            {/* Mark today button */}
             <TouchableOpacity
               style={[styles.markBtn, doneToday && { backgroundColor: habit.color }]}
               onPress={() => toggleHabitLog(habit.id, today)}
@@ -222,7 +215,6 @@ export default function HabitsScreen() {
         );
       })}
 
-      {/* ── Empty state ── */}
       {habits.length === 0 && (
         <View style={styles.emptyState}>
           <Ionicons name="checkmark-done-circle-outline" size={64} color={Colors.subtext} />
@@ -231,7 +223,6 @@ export default function HabitsScreen() {
         </View>
       )}
 
-      {/* ── Add habit modal ── */}
       <Modal visible={modalVisible} transparent animationType="slide">
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -347,7 +338,6 @@ const makeStyles = (C: ColorScheme) => StyleSheet.create({
   addBtn:     { backgroundColor: C.green, borderRadius: 12, padding: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
   addBtnText: { color: '#FFF', fontSize: 15, fontWeight: '700' },
 
-  // ── Summary card ──
   summaryCard:         { backgroundColor: C.primary, borderRadius: 16, padding: 16, marginTop: 16, marginBottom: 8 },
   summaryTopRow:       { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
   summaryTitle:        { color: '#FFF', fontSize: 14, fontWeight: '700' },
@@ -360,7 +350,6 @@ const makeStyles = (C: ColorScheme) => StyleSheet.create({
   summaryNum:          { color: '#FFF', fontSize: 22, fontWeight: '800' },
   summaryLabel:        { color: 'rgba(255,255,255,0.8)', fontSize: 11, marginTop: 2 },
 
-  // ── Habit card ──
   habitCard:   { backgroundColor: C.card, borderRadius: 16, padding: 16, marginTop: 12 },
   habitHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 14 },
   iconBadge:   { width: 44, height: 44, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
@@ -372,7 +361,6 @@ const makeStyles = (C: ColorScheme) => StyleSheet.create({
   streakText:  { fontSize: 12, fontWeight: '700' },
   deleteBtn:   { padding: 4 },
 
-  // ── Week grid ──
   weekGrid:  { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 14 },
   dayCell:   { alignItems: 'center', flex: 1 },
   dayLabel:  { fontSize: 10, color: C.subtext, marginBottom: 4, fontWeight: '600' },
@@ -382,7 +370,6 @@ const makeStyles = (C: ColorScheme) => StyleSheet.create({
     backgroundColor: C.border,
   },
 
-  // ── Progress ──
   weekProgressRow:   { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 },
   weekProgressLabel: { fontSize: 12, color: C.subtext },
   weekProgressPct:   { fontSize: 12, fontWeight: '700' },
@@ -390,7 +377,6 @@ const makeStyles = (C: ColorScheme) => StyleSheet.create({
   progressFill:      { height: 6, borderRadius: 3 },
   totalLabel:        { fontSize: 11, color: C.subtext, marginTop: 6 },
 
-  // ── Mark today button ──
   markBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
     marginTop: 12, paddingVertical: 10, borderRadius: 10,
@@ -398,12 +384,10 @@ const makeStyles = (C: ColorScheme) => StyleSheet.create({
   },
   markBtnText: { fontSize: 14, fontWeight: '700' },
 
-  // ── Empty state ──
   emptyState: { alignItems: 'center', marginTop: 60, gap: 10 },
   emptyTitle: { fontSize: 17, fontWeight: '700', color: C.subtext },
   emptyText:  { fontSize: 13, color: C.subtext, textAlign: 'center', lineHeight: 18 },
 
-  // ── Modal ──
   overlay:    { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
   modal:      { backgroundColor: C.card, borderTopLeftRadius: 20, borderTopRightRadius: 20, maxHeight: '90%' },
   modalTitle: { fontSize: 20, fontWeight: '800', color: C.text, marginBottom: 16 },

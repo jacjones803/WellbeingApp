@@ -44,8 +44,6 @@ function getDueDateStyle(
   return { label: formatDate(dueDate), color: Colors.subtext, bg: Colors.background };
 }
 
-// ── Calendar picker ──────────────────────────────────────────────────────────
-
 function CalendarPicker({
   selected, onSelect, onClose,
 }: {
@@ -122,8 +120,6 @@ function CalendarPicker({
     </View>
   );
 }
-
-// ── TaskCard ─────────────────────────────────────────────────────────────────
 
 function TaskCard({ task, onToggle, onDelete }: {
   task: AppTask;
@@ -247,8 +243,6 @@ function TaskCard({ task, onToggle, onDelete }: {
     </View>
   );
 }
-
-// ── Goals ─────────────────────────────────────────────────────────────────────
 
 type GoalCategory = Goal['category'];
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
@@ -542,8 +536,6 @@ function GoalsView() {
   );
 }
 
-// ── Main screen ───────────────────────────────────────────────────────────────
-
 export default function TasksScreen() {
   const { tasks, addTask, deleteTask, toggleTask, getEffectiveToday } = useApp();
   const Colors = useColors();
@@ -754,8 +746,6 @@ export default function TasksScreen() {
     </ScrollView>
   );
 }
-
-// ── Styles ────────────────────────────────────────────────────────────────────
 
 const makeStyles = (C: ColorScheme) => StyleSheet.create({
   container: { flex: 1, backgroundColor: C.background },

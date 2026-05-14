@@ -33,7 +33,6 @@ export default function InsightsScreen() {
   const [selectedDay,    setSelectedDay]    = useState<string | null>(null);
   const [expandedPanel,  setExpandedPanel]  = useState<'mood' | 'health' | 'habits' | 'tasks' | null>(null);
 
-  // ── Date setup ──
   const today      = getEffectiveToday();
   const dayOfWeek  = (now.getDay() + 6) % 7;
   const monday     = new Date(now);
@@ -46,7 +45,6 @@ export default function InsightsScreen() {
     return d.toISOString().split('T')[0];
   });
 
-  // ── Mood ──
   const moodWeek     = last7Dates.map(date => moodEntries.find(e => e.date === date) ?? null);
   const moodWithData = moodWeek.filter(Boolean);
   const avgMoodNum   = moodWithData.length > 0
@@ -61,7 +59,6 @@ export default function InsightsScreen() {
     avgMoodNum >= 2.5 ? '#F59E0B' : avgMoodNum >= 1.5 ? '#F97316' :
     avgMoodNum > 0   ? '#EF4444'  : Colors.subtext;
 
-  // ── Health ──
   const healthWeek     = last7Dates.map(date => healthEntries.find(e => e.date === date) ?? null);
   const healthWithData = healthWeek.filter(Boolean);
   const hCount         = Math.max(healthWithData.length, 1);
@@ -75,7 +72,6 @@ export default function InsightsScreen() {
     exercise: Math.round(avgExercise),
   };
 
-  // ── Habits ──
   const habitsThisWeek = habitLogs.filter(l => l.date >= thisWeekStart && l.completed).length;
   const possibleChecks = habits.length * 7;
   const habitPct       = possibleChecks > 0 ? Math.round((habitsThisWeek / possibleChecks) * 100) : 0;
@@ -85,13 +81,10 @@ export default function InsightsScreen() {
     return { ...h, completed, pct: Math.round((completed / 7) * 100) };
   }).sort((a, b) => b.pct - a.pct);
 
-  // ── Tasks ──
   const tasksThisWeek = tasks.filter(t => t.completedAt && t.completedAt >= thisWeekStart).length;
 
-  // ── Goals ──
   const activeGoals = goals.filter(g => g.progress < 100);
 
-  // ── Daily activity score helper ──
   const getDayScore = (dateStr: string): number => {
     const moodLogged    = moodEntries.some(e => e.date === dateStr) ? 1 : 0;
     const healthLogged  = healthEntries.some(e => e.date === dateStr) ? 1 : 0;
@@ -100,7 +93,6 @@ export default function InsightsScreen() {
     return moodLogged + healthLogged + habitsLogged + tasksLogged;
   };
 
-  // ── Calendar data ──
   const isCurrentMonth = viewYear === now.getFullYear() && viewMonth === now.getMonth();
   const daysInMonth    = new Date(viewYear, viewMonth + 1, 0).getDate();
   const firstDayOfWeek = (new Date(viewYear, viewMonth, 1).getDay() + 6) % 7;
@@ -122,7 +114,6 @@ export default function InsightsScreen() {
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
 
-  // ── Selected day detail ──
   const selEntry = selectedDay ? {
     mood:    moodEntries.find(e => e.date === selectedDay),
     health:  healthEntries.find(e => e.date === selectedDay),
@@ -134,10 +125,8 @@ export default function InsightsScreen() {
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.screenTitle}>Insights</Text>
 
-      {/* ── This week ── */}
       <Text style={styles.sectionTitle}>This Week</Text>
       <View style={styles.card}>
-        {/* 3 stat tiles */}
         <View style={styles.statRow}>
           {[
             { icon: 'checkmark-done-circle-outline', label: 'Habits',     value: `${habitPct}%`,                                 color: Colors.green },
@@ -152,7 +141,6 @@ export default function InsightsScreen() {
           ))}
         </View>
 
-        {/* Health averages divider */}
         <View style={styles.weekDivider} />
         <Text style={styles.weekSubtitle}>Health — 7-Day Averages</Text>
 
@@ -188,10 +176,8 @@ export default function InsightsScreen() {
         )}
       </View>
 
-      {/* ── Activity calendar ── */}
       <Text style={styles.sectionTitle}>Daily Activity</Text>
       <View style={styles.card}>
-        {/* Month nav */}
         <View style={styles.calHeader}>
           <TouchableOpacity onPress={prevMonth} style={styles.calNavBtn}>
             <Ionicons name="chevron-back" size={20} color={Colors.text} />
@@ -202,14 +188,12 @@ export default function InsightsScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Day labels */}
         <View style={styles.calDayRow}>
           {DAY_LABELS.map((d, i) => (
             <Text key={i} style={styles.calDayLabel}>{d}</Text>
           ))}
         </View>
 
-        {/* Grid */}
         <View style={styles.calGrid}>
           {calCells.map((day, i) => {
             if (!day) return <View key={`e${i}`} style={styles.calCell} />;
@@ -246,7 +230,6 @@ export default function InsightsScreen() {
           })}
         </View>
 
-        {/* Legend */}
         <View style={styles.calLegend}>
           <Text style={styles.calLegendLabel}>Activity:</Text>
           {HEAT_COLORS.map((color, i) => (
@@ -257,14 +240,12 @@ export default function InsightsScreen() {
           ))}
         </View>
 
-        {/* Selected day detail */}
         {selectedDay && selEntry && (
           <View style={styles.dayDetail}>
             <Text style={styles.dayDetailTitle}>
               {new Date(selectedDay + 'T12:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}
             </Text>
 
-            {/* 2x2 grid — tap a card to expand */}
             <View style={styles.dayDetailGrid}>
               {([
                 {
@@ -324,7 +305,6 @@ export default function InsightsScreen() {
               ))}
             </View>
 
-            {/* Expanded panel detail */}
             {expandedPanel === 'mood' && selEntry.mood && (
               <View style={styles.expandedPanel}>
                 <Text style={[styles.expandedRow]}>
@@ -382,7 +362,6 @@ export default function InsightsScreen() {
         )}
       </View>
 
-      {/* ── Habit breakdown ── */}
       <Text style={styles.sectionTitle}>Habit Completion This Week</Text>
       <View style={styles.card}>
         {habitStats.length === 0 ? (
@@ -410,7 +389,6 @@ export default function InsightsScreen() {
           ))
         )}
       </View>
-      {/* ── Goal progress ── */}
       <Text style={styles.sectionTitle}>Goal Progress</Text>
       <View style={styles.card}>
         {activeGoals.length === 0 ? (
@@ -462,7 +440,6 @@ const makeStyles = (C: ColorScheme) => StyleSheet.create({
   subSectionTitle: { fontSize: 13, fontWeight: '600', color: C.subtext, marginTop: 16, marginBottom: 8 },
   card:         { backgroundColor: C.card, borderRadius: 16, padding: 16 },
 
-  // ── This week ──
   statRow:      { flexDirection: 'row', gap: 8 },
   statTile:     { flex: 1, borderRadius: 12, padding: 10, alignItems: 'center', gap: 3 },
   statValue:    { fontSize: 16, fontWeight: '800' },
@@ -471,7 +448,6 @@ const makeStyles = (C: ColorScheme) => StyleSheet.create({
   weekSubtitle: { fontSize: 13, fontWeight: '700', color: C.text, marginBottom: 12 },
   weekNoData:   { fontSize: 12, color: C.subtext, textAlign: 'center', paddingVertical: 8 },
 
-  // ── Activity calendar ──
   calHeader:   { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
   calNavBtn:   { padding: 6 },
   calTitle:    { fontSize: 15, fontWeight: '700', color: C.text },
@@ -506,7 +482,6 @@ const makeStyles = (C: ColorScheme) => StyleSheet.create({
   expandedSubLabel:   { fontSize: 13, color: C.text, flex: 1 },
   expandedSubValue:   { fontSize: 13, fontWeight: '700' },
 
-  // ── Health ──
   healthRow:       { flexDirection: 'row', alignItems: 'center' },
   healthIconBg:    { width: 40, height: 40, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   healthRowHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
@@ -516,7 +491,6 @@ const makeStyles = (C: ColorScheme) => StyleSheet.create({
   healthBarBg:     { height: 8, backgroundColor: C.border, borderRadius: 4 },
   healthBarFill:   { height: 8, borderRadius: 4 },
 
-  // ── Habits ──
   habitRow:       { flexDirection: 'row', alignItems: 'center' },
   habitIconBg:    { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   habitRowHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 },
@@ -526,7 +500,6 @@ const makeStyles = (C: ColorScheme) => StyleSheet.create({
   habitBarFill:   { height: 8, borderRadius: 4 },
   habitDays:      { fontSize: 10, color: C.subtext, marginTop: 3 },
 
-  // ── Goals ──
   goalRow:        { },
   goalRowHeader:  { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 6 },
   goalName:       { fontSize: 14, fontWeight: '700', color: C.text, flex: 1, marginRight: 8 },
@@ -536,7 +509,6 @@ const makeStyles = (C: ColorScheme) => StyleSheet.create({
   goalBarFill:    { height: 8, borderRadius: 4 },
   goalMilestone:  { fontSize: 10, color: C.subtext, marginTop: 4 },
 
-  // ── Empty states ──
   emptyState: { alignItems: 'center', paddingVertical: 16, gap: 8 },
   emptyText:  { fontSize: 13, color: C.subtext, textAlign: 'center' },
 });
